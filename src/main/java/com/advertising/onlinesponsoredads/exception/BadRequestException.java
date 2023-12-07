@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising.exception;
+package com.advertising.onlinesponsoredads.exception;
 
 public class BadRequestException extends RuntimeException {
 

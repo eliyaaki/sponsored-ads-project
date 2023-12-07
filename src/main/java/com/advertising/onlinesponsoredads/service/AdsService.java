@@ -1,16 +1,16 @@
-package com.onlinesponsoredads.advertising.service;
+package com.advertising.onlinesponsoredads.service;
 
-import com.onlinesponsoredads.advertising.dto.request.CreateCampaignRequest;
-import com.onlinesponsoredads.advertising.dto.response.CreateCampaignResponseDTO;
-import com.onlinesponsoredads.advertising.dto.response.ServeAdResponseDTO;
-import com.onlinesponsoredads.advertising.exception.NotFoundException;
-import com.onlinesponsoredads.advertising.model.Campaign;
-import com.onlinesponsoredads.advertising.model.Category;
-import com.onlinesponsoredads.advertising.model.Product;
-import com.onlinesponsoredads.advertising.repository.CampaignRepository;
-import com.onlinesponsoredads.advertising.repository.CategoryRepository;
-import com.onlinesponsoredads.advertising.repository.ProductRepository;
-import com.onlinesponsoredads.advertising.util.ConversionUtil;
+import com.advertising.onlinesponsoredads.dto.request.CreateCampaignRequestDTO;
+import com.advertising.onlinesponsoredads.dto.response.CreateCampaignResponseDTO;
+import com.advertising.onlinesponsoredads.dto.response.ServeAdResponseDTO;
+import com.advertising.onlinesponsoredads.util.ConversionUtil;
+import com.advertising.onlinesponsoredads.exception.NotFoundException;
+import com.advertising.onlinesponsoredads.model.Campaign;
+import com.advertising.onlinesponsoredads.model.Category;
+import com.advertising.onlinesponsoredads.model.Product;
+import com.advertising.onlinesponsoredads.repository.CampaignRepository;
+import com.advertising.onlinesponsoredads.repository.CategoryRepository;
+import com.advertising.onlinesponsoredads.repository.ProductRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class AdsService {
 
 
     @Transactional
-    public CreateCampaignResponseDTO createCampaign(CreateCampaignRequest campaignRequest) {
+    public CreateCampaignResponseDTO createCampaign(CreateCampaignRequestDTO campaignRequest) {
         log.info("Creating a new campaign...");
         // Fetch products by their IDs
         Set<Product> products = productRepository.findAllBySerialNumberIn(campaignRequest.getProductSerialNumbers());

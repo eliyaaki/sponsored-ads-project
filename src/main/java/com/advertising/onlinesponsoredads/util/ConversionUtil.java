@@ -1,21 +1,20 @@
-package com.onlinesponsoredads.advertising.util;
+package com.advertising.onlinesponsoredads.util;
 
-import com.onlinesponsoredads.advertising.dto.request.CreateCampaignRequest;
-import com.onlinesponsoredads.advertising.dto.response.CreateCampaignResponseDTO;
-import com.onlinesponsoredads.advertising.dto.response.ServeAdResponseDTO;
-import com.onlinesponsoredads.advertising.model.Campaign;
-import com.onlinesponsoredads.advertising.model.Category;
-import com.onlinesponsoredads.advertising.model.Product;
+import com.advertising.onlinesponsoredads.dto.response.CreateCampaignResponseDTO;
+import com.advertising.onlinesponsoredads.dto.response.ServeAdResponseDTO;
+import com.advertising.onlinesponsoredads.dto.request.CreateCampaignRequestDTO;
+import com.advertising.onlinesponsoredads.model.Campaign;
+import com.advertising.onlinesponsoredads.model.Category;
+import com.advertising.onlinesponsoredads.model.Product;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class ConversionUtil {
 
-    public Campaign convertFromCreateCampaignRequest(CreateCampaignRequest createCampaignRequest, Set<Product> products) {
+    public Campaign convertFromCreateCampaignRequest(CreateCampaignRequestDTO createCampaignRequest, Set<Product> products) {
         try {
             Campaign campaign = Campaign.builder()
                     .name(createCampaignRequest.getName())

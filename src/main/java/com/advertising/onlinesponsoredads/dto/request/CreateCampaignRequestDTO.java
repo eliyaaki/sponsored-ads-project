@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising.dto.request;
+package com.advertising.onlinesponsoredads.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCampaignRequest {
+public class CreateCampaignRequestDTO {
     @NotEmpty(message = "Name is required")
     @Size(min = 2, max = 20, message = "Name variable must have at least 2 letters")
     private String name;

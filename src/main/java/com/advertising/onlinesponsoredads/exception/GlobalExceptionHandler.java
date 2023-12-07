@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising.exception;
+package com.advertising.onlinesponsoredads.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

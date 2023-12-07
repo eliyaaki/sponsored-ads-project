@@ -1,6 +1,6 @@
-package com.onlinesponsoredads.advertising.repository;
+package com.advertising.onlinesponsoredads.repository;
 
-import com.onlinesponsoredads.advertising.model.Campaign;
+import com.advertising.onlinesponsoredads.model.Campaign;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;

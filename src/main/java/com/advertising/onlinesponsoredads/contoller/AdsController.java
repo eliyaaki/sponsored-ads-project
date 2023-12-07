@@ -1,13 +1,12 @@
-package com.onlinesponsoredads.advertising.contoller;
+package com.advertising.onlinesponsoredads.contoller;
 
-import com.onlinesponsoredads.advertising.dto.request.CreateCampaignRequest;
-import com.onlinesponsoredads.advertising.dto.response.CreateCampaignResponseDTO;
-import com.onlinesponsoredads.advertising.dto.response.ServeAdResponseDTO;
-import com.onlinesponsoredads.advertising.service.AdsService;
+import com.advertising.onlinesponsoredads.dto.request.CreateCampaignRequestDTO;
+import com.advertising.onlinesponsoredads.dto.response.CreateCampaignResponseDTO;
+import com.advertising.onlinesponsoredads.dto.response.ServeAdResponseDTO;
+import com.advertising.onlinesponsoredads.service.AdsService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +22,7 @@ public class AdsController {
     private final AdsService adsService;
 
     @PostMapping("/createCampaign")
-    public ResponseEntity<CreateCampaignResponseDTO> createCampaign(@RequestBody @Valid CreateCampaignRequest request) {
+    public ResponseEntity<CreateCampaignResponseDTO> createCampaign(@RequestBody @Valid CreateCampaignRequestDTO request) {
         log.info("createCampaign api got called with: {}", request);
         CreateCampaignResponseDTO campaign = adsService.createCampaign(request);
         log.info("createCampaign finished successfully, with campaign:{}", campaign);

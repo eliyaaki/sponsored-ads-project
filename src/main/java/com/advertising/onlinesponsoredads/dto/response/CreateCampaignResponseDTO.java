@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising.dto.response;
+package com.advertising.onlinesponsoredads.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
