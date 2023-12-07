@@ -11,6 +11,7 @@ import com.onlinesponsoredads.advertising.repository.CampaignRepository;
 import com.onlinesponsoredads.advertising.repository.CategoryRepository;
 import com.onlinesponsoredads.advertising.repository.ProductRepository;
 import com.onlinesponsoredads.advertising.util.ConversionUtil;
+import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ import java.util.*;
 @Slf4j
 public class AdsService {
 
-
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CampaignRepository campaignRepository;
@@ -35,112 +35,98 @@ public class AdsService {
     public CreateCampaignResponseDTO createCampaign(CreateCampaignRequest campaignRequest) {
         log.info("Creating a new campaign...");
         // Fetch products by their IDs
-        List<Product> products = productRepository.findAllBySerialNumberIn(campaignRequest.getProductSerialNumbers());
+        Set<Product> products = productRepository.findAllBySerialNumberIn(campaignRequest.getProductSerialNumbers());
+        if (products.isEmpty()) throw new NotFoundException("Didnt find any Product With the provided serial number");
+
         log.info("Fetching new campaign matching products: {}", products);
-        // Create a new campaign
         Campaign campaign = conversionUtil.convertFromCreateCampaignRequest(campaignRequest, products);
 
         // Save the new campaign and associate products
         saveCampaignAndAssociateProducts(campaign, products);
 
         log.info("Campaign and associated products created successfully.");
-
         return conversionUtil.convertToCampaignResponseDTO(campaign);
     }
 
     @Transactional
     public ServeAdResponseDTO getAdByCategory(String categoryName) {
         log.info("Fetching ad for category: {}", categoryName);
-//        Optional<Category> categoryOptional = categoryRepository.findByName(categoryName);
-        Optional<Category> categoryOptional = categoryRepository.findByNameWithProductsAndCampaigns(categoryName);
 
-        if (categoryOptional.isPresent()) {
-            Category category = categoryOptional.get();
+        Category category = categoryRepository.findByNameWithProductsAndCampaigns(categoryName)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
 
-            log.info("Pulled the category from the DB: {}", category);
-            // Fetch all products associated with the category
-            Set<Product> products = category.getProducts();
-            log.info("Found a suitable products for category: {}", products);
-//            // Filter products based on additional conditions
-            Optional<Product> suitableProduct = findSuitableProduct(products);
+        log.info("Pulled the category from the DB: {}", category);
 
-            if (!suitableProduct.isEmpty()) {
-                log.info("Found a suitable ad: {}", suitableProduct.get());
-                // Find the product with the highest bid
-                return conversionUtil.convertToServeAdResponseDTO(suitableProduct.get());
-            }
-        }
-        log.warn("Failed to find appropriate ad for category: {}", categoryName);
-        throw new NotFoundException("Failed to find appropriate Ad");
+        Set<Product> products = category.getProducts();
+        log.info("Found all products associated with the category: {}", products);
+
+        Optional<Product> suitablePromotedProduct = findSuitablePromotedProduct(products);
+        return suitablePromotedProduct
+                .map(product -> {
+                    log.info("Found a suitable ad: {}", product);
+                    return conversionUtil.convertToServeAdResponseDTO(product);
+                })
+                .orElseThrow(() -> new NotFoundException("No suitable promoted product found."));
     }
 
-
-
-    private Optional<Product> findSuitableProduct(Set<Product> products) {
+    private Optional<Product> findSuitablePromotedProduct(Set<Product> products) {
         log.debug("Finding suitable product...");
         if (products.isEmpty()) {
-            var PromotedProduct = productRepository.findPromotedProductWithHighestBid();
-            log.debug("products isEmpty so we find PromotedProduct: {}", PromotedProduct);
-            return PromotedProduct;
+            return productRepository.findPromotedProductWithHighestBid();
         }
         // Find the product with the highest bid from the associated campaign
-        Optional<Product> suitableProduct = products.stream()
+        return products.stream()
                 .filter(product -> !product.getCampaigns().isEmpty())
                 .max(Comparator.comparingDouble(this::getMaxBidOfActiveCampaigns));
-
-        if (suitableProduct.isPresent()) {
-            log.debug("Found a suitable product-ad with ID: {}", suitableProduct.get().getId());
-        } else {
-            log.debug("No suitable product found.");
-        }
-
-        return suitableProduct;
     }
     private double getMaxBidOfActiveCampaigns(Product product) {
-        log.debug("Calculating max bid of active campaigns for product ID: {}", product.getId());
-        return product.getCampaigns().stream()
-                .filter(c->isActiveCampaign(c))
-                .mapToDouble(Campaign::getBid)
-                .max()
-                .orElse(0.0);
+            log.debug("Calculating max bid of active campaigns for product ID: {}", product.getId());
+            return product.getCampaigns().stream()
+                    .filter(c->isActiveCampaign(c))
+                    .mapToDouble(Campaign::getBid)
+                    .max()
+                    .orElse(0.0);
     }
 
     private boolean isActiveCampaign(Campaign campaign) {
-        log.debug("Checking if campaign ID {} is active...", campaign.getId());
-        if (campaign == null || campaign.getStartDate() == null || !campaign.isActive()) {
-            // If the campaign is null or not active, return false
-            return false;
+        try {
+            log.debug("Checking if campaign ID {} is active...", campaign.getId());
+            if (campaign == null || campaign.getStartDate() == null || !campaign.isActive()) {
+                // If the campaign is null or not active, return false
+                return false;
+            }
+            if (campaign.getStartDate().plusDays(7).isBefore(LocalDate.now())) {
+                // If 7 days have passed since start date, update isActive to false and return false
+                campaign.setActive(false);
+                log.info("Campaign ID {} is set to no longer be active.", campaign.getId());
+                return false;
+            }
+            campaign.setActive(true);
+            log.debug("Campaign ID {} is set to be active.", campaign.getId());
+            // If the campaign is active and 7 days haven't passed, return true
+            return true;
+        } catch (Exception e) {
+            log.error("An error occurred while checking if the campaign is active", e);
+            throw new IllegalStateException("An error occurred while checking if the campaign is active", e);
         }
-        if (campaign.getStartDate().plusDays(7).isBefore(LocalDate.now())) {
-            // If 7 days have passed since start date, update isActive to false and return false
-            campaign.setActive(false);
-            log.info("Campaign ID {} is set to no longer be active.", campaign.getId());
-            // Optionally, you might want to persist the changes to the database here
-            return false;
-        }
-        campaign.setActive(true);
-        log.debug("Campaign ID {} is set to be active.", campaign.getId());
-        // If the campaign is active and 7 days haven't passed, return true
-        return true;
     }
 
-
-    private void saveCampaignAndAssociateProducts(Campaign campaign, List<Product> products) {
+    private void saveCampaignAndAssociateProducts(Campaign campaign, Set<Product> products) {
         try {
+            // Create a copy of the products set to avoid ConcurrentModificationException
+            Set<Product> productsCopy = new HashSet<>(products);
 
-            // Associate products with the campaign
-            campaign.getProducts().forEach(product -> product.getCampaigns().add(campaign));
+            // Associate the new campaign with existing products using addCampaign method
+            productsCopy.forEach(product -> product.addCampaign(campaign));
+
             // Save the new campaign
             campaignRepository.save(campaign);
-            log.info("Campaign saved successfully.");
-//            // Associate products with the campaign
-//            products.forEach(product -> product.getCampaigns().add(campaign));
-//
-//            // Save the modified products list
-//            productRepository.saveAll(products);
-//            log.info("Products associated with the campaign saved successfully.");
-        } catch (Exception e) {
+            log.info("Campaign and Products associated with it saved successfully.");
+        } catch (PersistenceException e) {
             log.error("Error occurred while saving campaign and associating products: {}", e.getMessage());
+            throw new PersistenceException("Failed to save campaign and associate products.", e);
+        } catch (Exception e) {
+            log.error("Error occurred: {}", e.getMessage());
             throw new RuntimeException("Failed to save campaign and associate products.", e);
         }
     }

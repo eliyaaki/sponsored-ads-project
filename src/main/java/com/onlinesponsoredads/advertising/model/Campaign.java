@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @ToString
@@ -29,7 +29,7 @@ public class Campaign {
 
     @ManyToMany(mappedBy = "campaigns", fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 
     private boolean isActive;
 }
