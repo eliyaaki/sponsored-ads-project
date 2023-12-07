@@ -1,4 +1,4 @@
-# sponsored-ads-project
+# Sponsored Ads Project
 
 ## Overview
 
@@ -49,21 +49,46 @@ You can modify this file according to your specific requirements and data specif
 
 Follow these steps to run the application using Docker Compose:
 
-1. **Clone the Repository:**
+**Clone the Repository:**
 
-   ```bash
-   git clone https://github.com//eliyaaki/sponsored-ads-project.git
-   cd sponsored-ads-project
+	$ git clone https://github.com//eliyaaki/sponsored-ads-project.git
+	$ cd sponsored-ads-project
+   
   
 Run this command to start the applications.
 
 	$ docker-compose up -d
   
 
-## How to run the application without Docker
+## How to run the application without Docker Compose
+
 
 ### Building the project
 Clone the project and use Maven to build the server
 
 	$ mvn clean package
+
+
+
+### Postgres Instance Configuration
+In order to use your instance without docker-compose you shoud install postgres localy and update the [ Database Configuration Section ] section for your requirement in ```src/main/resources/application.yml```
+
+```yaml
+#
+# [ Database Configuration Section ]
+#
+spring:
+  application:
+    name: onlinesponsoredads
+  datasource:
+    url: jdbc:postgresql://localhost:5432/online-sponsored-ads
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    name: online-sponsored-ads
+  
+#
+# [ Other Configuration Attributes ]
+#
+```
   
