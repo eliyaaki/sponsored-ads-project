@@ -6,14 +6,6 @@ The online-sponsored-ads System is a web application designed to manage and serv
 
 ## Entity Relationships
 
-### Campaign Entity
-
-- **name**: Campaign name
-- **startDate**: Start date of the campaign
-- **bid**: Bid amount
-- **isActive**: Campaign status
-- **products**: Associated products
-
 ### Product Entity
 
 - **title**: Product title
@@ -22,10 +14,32 @@ The online-sponsored-ads System is a web application designed to manage and serv
 - **campaigns**: Associated campaigns
 - **categories**: Associated categories
 
+### Campaign Entity
+
+- **name**: Campaign name
+- **startDate**: Start date of the campaign
+- **bid**: Bid amount
+- **isActive**: Campaign status
+- **products**: Associated products
+
+
 ### Category Entity
 
 - **name**: Category name
 - **products**: Associated products
+
+## Performance Optimization
+
+To enhance the performance of the system, the following optimizations have been implemented:
+
+- **Indexes**: Indexes were added to optimize query performance on the `bid` and `startDate` fields in the `Campaign` entity, the `serialNumber` field in the `Product` entity, and the `name` field in the `Category` entity.
+
+- **Lazy Loading**: `@ManyToMany` relationships are configured for lazy loading, optimizing the retrieval of associated data.
+
+- **LEFT JOIN**: LEFT JOIN is used in specific queries to optimize data retrieval when fetching related entities.
+
+These optimizations aim to provide a faster and more efficient experience when querying and interacting with the sponsored ads system.
+
 
 ## Swagger UI
 Open your browser at the following URL for Swagger UI (giving REST interface details):
