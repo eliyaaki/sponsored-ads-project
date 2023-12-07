@@ -13,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(indexes = @Index(columnList = "serialNumber", name = "idx_product_serial_number"))
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
