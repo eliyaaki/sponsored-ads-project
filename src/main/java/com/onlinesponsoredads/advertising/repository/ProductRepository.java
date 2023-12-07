@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findAllBySerialNumberIn(List<String> serialNumbers);
+    Set<Product> findAllBySerialNumberIn(List<String> serialNumbers);
 
     @Query(value = "SELECT p.* FROM Product p " +
             "JOIN product_campaign cp ON p.id = cp.product_id " +

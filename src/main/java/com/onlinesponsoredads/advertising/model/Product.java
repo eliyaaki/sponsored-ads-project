@@ -30,15 +30,27 @@ public class Product {
     @ToString.Exclude
     private Set<Campaign> campaigns = new HashSet<>();
 
-
     @ManyToMany
-//    @ManyToMany(cascade = {
-//            CascadeType.PERSIST,
-//            CascadeType.MERGE
-//    }, fetch = FetchType.LAZY)
     @JoinTable(name = "product_category",
             joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
     @ToString.Exclude
     private Set<Category> categories = new HashSet<>();
+
+    public void addCampaign(Campaign campaign) {
+        campaigns.add(campaign);
+        campaign.getProducts().add(this);
+    }
+    public void removeCampaign(Campaign campaign) {
+        campaigns.remove(campaign);
+        campaign.getProducts().remove(this);
+    }
+    public void addCategory(Category category) {
+        categories.add(category);
+        category.getProducts().add(this);
+    }
+    public void removeCategory(Category category) {
+        categories.remove(category);
+        category.getProducts().remove(this);
+    }
 }
