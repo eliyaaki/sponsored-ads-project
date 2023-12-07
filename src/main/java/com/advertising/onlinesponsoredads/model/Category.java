@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising.model;
+package com.advertising.onlinesponsoredads.model;
 
 import jakarta.persistence.*;
 import lombok.*;

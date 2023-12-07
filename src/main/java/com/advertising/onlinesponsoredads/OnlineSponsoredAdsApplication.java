@@ -1,4 +1,4 @@
-package com.onlinesponsoredads.advertising;
+package com.advertising.onlinesponsoredads;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories
 @EnableJpaAuditing
 @SpringBootApplication
-public class AdvertisingApplication {
+public class OnlineSponsoredAdsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AdvertisingApplication.class, args);
+		SpringApplication.run(OnlineSponsoredAdsApplication.class, args);
 	}
 
 }
