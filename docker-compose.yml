@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    expose:
+      - 5431
+    ports:
+      - 5431:5431
+    container_name: postgres_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: onlinesponsoredads
+      POSTGRES_PASSWORD: onlinesponsoredads
+      POSTGRES_DB: onlinesponsoredads
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres:/data/postgres
+    command: -p 5431
+
+  app:
+    container_name: BACKEND
+    volumes:
+      - .:/app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5431/onlinesponsoredads
+      SPRING_DATASOURCE_USERNAME: onlinesponsoredads
+      SPRING_DATASOURCE_PASSWORD: onlinesponsoredads
+    depends_on:
+      - postgres_db
+
+#networks:
+#  default:
+#    external:
+#      name: MYAPP
