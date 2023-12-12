@@ -61,7 +61,6 @@ public class AdsService {
         log.info("Fetching ad for category: {}", categoryName);
 
         Category category = getCategoryByName(categoryName);
-
         Set<Product> products = category.getProducts();
         log.info("Found all products associated with the category: {}", products);
 
@@ -108,7 +107,7 @@ public class AdsService {
                 return false;
             }
             if (campaign.getStartDate().plusDays(numOfActiveDays).isBefore(LocalDate.now())) {
-                // If 7 days have passed since start date, update isActive to false and return false
+                // If numOfActiveDays(by default its 7) have passed since start date, update isActive to false and return false
                 campaign.setActive(false);
                 log.info("Campaign ID {} is set to no longer be active.", campaign.getId());
                 return false;
