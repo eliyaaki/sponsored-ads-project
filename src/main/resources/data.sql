@@ -36,20 +36,20 @@ INSERT INTO Category (name) VALUES
 
 -- Dummy data for Campaign table
 INSERT INTO Campaign (name, start_date, bid, is_active) VALUES
-                                                            ('Holiday Sale', '2023-12-01', 100.00, true),
+                                                            ('Holiday Sale', '2023-12-20', 100.00, true),
                                                             ('Year-End Clearance', '2023-12-15', 50.00, true),
-                                                            ('Black Friday Deals', '2023-11-24', 75.00, true),
-                                                            ('Summer Clearance', '2023-06-15', 30.00, true),
-                                                            ('Back-to-School Sale', '2023-08-01', 40.00, true),
-                                                            ('Spring Fashion Sale', '2023-04-01', 60.00, true),
-                                                            ('Home Makeover Event', '2023-03-15', 90.00, true),
-                                                            ('Gaming Gear Promo', '2023-07-01', 55.00, true),
-                                                            ('Fitness Essentials Sale', '2023-01-15', 45.00, true),
-                                                            ('Valentines Day Special', '2023-02-01', 70.00, true),
+                                                            ('Black Friday Deals', '2023-12-10', 75.00, true),
+                                                            ('Summer Clearance', '2023-12-10', 30.00, true),
+                                                            ('Back-to-School Sale', '2023-12-10', 40.00, true),
+                                                            ('Spring Fashion Sale', '2023-12-10', 60.00, true),
+                                                            ('Home Makeover Event', '2023-12-10', 90.00, true),
+                                                            ('Gaming Gear Promo', '2023-12-10', 55.00, true),
+                                                            ('Fitness Essentials Sale', '2023-12-10', 45.00, true),
+                                                            ('Valentines Day Special', '2023-12-14', 70.00, true),
                                                             ('Tech Expo Discounts', '2023-10-01', 80.00, true),
                                                             ('Outdoor Adventure Sale', '2023-05-01', 65.00, true),
-                                                            ('Autumn Home Decor', '2023-09-01', 85.00, true),
-                                                            ('Winter Fashion Showcase', '2023-11-01', 55.00, true),
+                                                            ('Autumn Home Decor', '2023-12-16', 85.00, true),
+                                                            ('Winter Fashion Showcase', '2023-12-25', 55.00, true),
                                                             ('New Years Clearance', '2023-12-31', 60.00, true);
 
 -- Dummy data for Product_Category table (linking products to categories)

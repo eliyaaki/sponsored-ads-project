@@ -45,3 +45,5 @@ springdoc:
   api-docs:
     path: /api-docs
 
+
+numOfActiveDays: 10
